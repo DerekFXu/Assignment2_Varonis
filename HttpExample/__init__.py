@@ -27,12 +27,13 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     if name:
         try:
             secret = client.get_secret(name)
-            vault_name_first = secret.properties.vault_url.replace("https://", "")
-            vault_name = vault_name_first.replace(".vault.azure.net/", "")
-            secret_time = secret.properties.created_on.strftime("%m/%d/%Y, %H:%M:%S")
-            return func.HttpResponse(f"Name of the Key Vault: {vault_name}\nName of the Key Vault Secret: {secret.name}\nCreation Date Of Secret: {secret_time}\nValue Of Secret: {secret.value}\n{vault_name_first}\n{secret.properties.vault_url}")
         except requests.HTTPError as e:
             return func.HttpResponse(f"Sorry this is not a valid secret name, error: {e}")
+            
+        vault_name_first = secret.properties.vault_url.replace("https://", "")
+        vault_name = vault_name_first.replace(".vault.azure.net/", "")
+        secret_time = secret.properties.created_on.strftime("%m/%d/%Y, %H:%M:%S")
+        return func.HttpResponse(f"Name of the Key Vault: {vault_name}\nName of the Key Vault Secret: {secret.name}\nCreation Date Of Secret: {secret_time}\nValue Of Secret: {secret.value}\n{vault_name_first}\n{secret.properties.vault_url}")
     else:
         return func.HttpResponse(
              "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
