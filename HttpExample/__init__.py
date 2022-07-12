@@ -4,6 +4,7 @@ import azure.functions as func
 from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import SecretClient
 from datetime import datetime
+from urllib3 import urllib.parse
 
 
 #Credientials to access key vault
@@ -31,10 +32,10 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             secret = client.get_secret(name)
         except Exception as e:
             return func.HttpResponse("Generic Error")
-    
-        vault_name_first = secret.properties.vault_url.replace("https://", "")
-        #This line and above strip the url to give just the key vault name. But this second replace function doesn't work properly even though it works fine in a pyhton interpreter. I don't know why
-        vault_name = vault_name_first.replace(".vault.azure.net/", "")
+        #Parses URL for keyvault name
+        vault_url = secret.properties.vault_url
+        u = urllib.parse.urlparse(vault_url)
+        vault_name = u.netloc.removesuffix('.vault.azure.net')
         #Converts created_on to string
         secret_time = secret.properties.created_on.strftime("%m/%d/%Y, %H:%M:%S")
-        return func.HttpResponse(f"Name of the Key Vault: {vault_name}\nName of the Key Vault Secret: {secret.name}\nCreation Date Of Secret: {secret_time}\nValue Of Secret: {secret.value}\n{vault_name_first}")
+        return func.HttpResponse(f"Name of the Key Vault: {vault_name}\nName of the Key Vault Secret: {secret.name}\nCreation Date Of Secret: {secret_time}\nValue Of Secret: {secret.value}")
