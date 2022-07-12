@@ -1,5 +1,4 @@
 import logging
-import requests
 
 import azure.functions as func
 from azure.identity import DefaultAzureCredential
@@ -27,7 +26,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     if name:
         try:
             secret = client.get_secret(name)
-        except:
+        except Exception:
             return func.HttpResponse(f"Sorry this is not a valid secret name")
             
         vault_name_first = secret.properties.vault_url.replace("https://", "")
