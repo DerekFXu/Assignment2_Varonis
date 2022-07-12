@@ -27,8 +27,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     if name:
         try:
             secret = client.get_secret(name)
-        except requests.HTTPError as e:
-            return func.HttpResponse(f"Sorry this is not a valid secret name, error: {e}")
+        except:
+            return func.HttpResponse(f"Sorry this is not a valid secret name")
             
         vault_name_first = secret.properties.vault_url.replace("https://", "")
         vault_name = vault_name_first.replace(".vault.azure.net/", "")
