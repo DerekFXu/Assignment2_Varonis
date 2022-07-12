@@ -30,8 +30,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             vault_name_first = secret.properties.vault_url.replace("https://", "")
             vault_name = vault_name_first.replace(".vault.azure.net/", "")
             secret_time = secret.properties.created_on.strftime("%m/%d/%Y, %H:%M:%S")
-            return func.HttpResponse(f"Name of the Key Vault: {vault_name}\nName of the Key Vault Secret: {secret.name}\nCreation Date Of Secret: {secret_time}\nValue Of Secret: {secret.value}\n{vault_name_first}")
-        except HTTPError:
+            return func.HttpResponse(f"Name of the Key Vault: {vault_name}\nName of the Key Vault Secret: {secret.name}\nCreation Date Of Secret: {secret_time}\nValue Of Secret: {secret.value}\n{vault_name_first}\n{secret.properties.vault_url}")
+        except urllib.exceptions.HTTPError:
             return func.HttpResponse("Sorry this is not a valid secret name")
     else:
         return func.HttpResponse(
