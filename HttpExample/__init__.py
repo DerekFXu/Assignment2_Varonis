@@ -4,7 +4,7 @@ import azure.functions as func
 from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import SecretClient
 from datetime import datetime
-from urllib3 import urllib.parse
+from urllib import urllib.parse
 
 
 #Credientials to access key vault
